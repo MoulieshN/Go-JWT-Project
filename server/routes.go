@@ -4,6 +4,7 @@ import (
 	"context"
 
 	controllers "github.com/MoulieshN/Go-JWT-Project.git/controllers"
+	"github.com/MoulieshN/Go-JWT-Project.git/middleware"
 	"github.com/MoulieshN/Go-JWT-Project.git/repository"
 	"github.com/gin-gonic/gin"
 )
@@ -23,8 +24,8 @@ func NewRoutes(c context.Context, repo repository.UserRepository) *gin.Engine {
 		})
 	})
 
-	authorized.POST("user/signup", controller.SignUp)
-	authorized.POST("user/login", controller.Login)
+	authorized.POST("user/signup", UserController.SignUp())
+	authorized.POST("user/login", UserController.Login())
 
 	router.Use(middleware.Authenticate())
 	internal.GET("", UserController.GetUsers())
