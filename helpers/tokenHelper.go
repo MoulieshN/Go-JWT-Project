@@ -48,7 +48,6 @@ func GenerateAllTokens(email string, firstname string, lastname string, userType
 		log.Panic(err)
 		return "", "", err
 	}
-
 	return token, refresh_token, nil
 }
 

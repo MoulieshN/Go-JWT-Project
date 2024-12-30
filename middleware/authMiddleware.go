@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/MoulieshN/Go-JWT-Project.git/helpers"
@@ -11,6 +12,7 @@ func Authenticate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		clientToken := c.Request.Header.Get("token")
 		if clientToken == "" {
+			log.Print("Not authorized to acces the resources")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return

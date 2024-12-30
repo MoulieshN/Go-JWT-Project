@@ -9,6 +9,7 @@ import (
 
 	"github.com/MoulieshN/Go-JWT-Project.git/config"
 	"github.com/MoulieshN/Go-JWT-Project.git/repository"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func Init(logCtx context.Context, port string) {
@@ -16,7 +17,6 @@ func Init(logCtx context.Context, port string) {
 
 	dbCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-
 	db, err := sql.Open(
 		"mysql",
 		fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?parseTime=%v",
@@ -42,6 +42,13 @@ func Init(logCtx context.Context, port string) {
 	defer db.Close()
 
 	repo := repository.NewRepository(db)
+
+	// Creating a table
+	// But it should be handled properly using goose-migrator or gorm
+	err = repo.CreateTable()
+	if err != nil {
+		panic(err)
+	}
 
 	r := NewRoutes(logCtx, repo)
 

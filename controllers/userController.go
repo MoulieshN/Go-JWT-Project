@@ -62,23 +62,23 @@ func (u *UserController) SignUp() gin.HandlerFunc {
 		user.Password = &hashedPassword
 
 		// Save user in a db
-		incrementNo, err := u.userRepo.CreateUser(user)
+		userID, err := u.userRepo.CreateUser(user)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
 		// Generate the token and refresh token
-		token, refreshToken, _ := helpers.GenerateAllTokens(*user.Email, *user.FirstName, *user.LastName, *user.UserType, user.UserId)
+		token, refreshToken, _ := helpers.GenerateAllTokens(*user.Email, *user.FirstName, *user.LastName, *user.UserType, userID)
 
 		// update the user with token and refresh token
-		err = u.userRepo.UpdateUserToken(token, refreshToken, user.UserId)
+		err = u.userRepo.UpdateUserToken(token, refreshToken, userID)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"data": incrementNo})
+		c.JSON(http.StatusOK, gin.H{"data": userID})
 	}
 }
 
